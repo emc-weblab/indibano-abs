@@ -811,11 +811,11 @@ body {
 
 @media (max-width: 480px) {
   .hero-title {
-    font-size: 2.25rem;
+    font-size: 2rem;
   }
 
   .hero-subtitle {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 
   .cta-box {
@@ -829,4 +829,5 @@ body {
   .final-cta h3 {
     font-size: 1.5rem;
   }
+
 }
