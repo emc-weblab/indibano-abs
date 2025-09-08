@@ -881,7 +881,7 @@ body {
   border-radius: 8px;
   border: 1px solid #444; /* subtle border for dark mode */
   font-size: 1rem;
-  color: #fff;
+  color: #000;
   background-color: #111; /* darker input background */
 }
 
@@ -910,30 +910,4 @@ body {
   text-align: center;
   color: #fff;
 }
-
-/* Force input/textarea styles */
-#quoteForm input,
-#quoteForm textarea {
-  background-color: #ffffff !important; /* white background */
-  color: #000000 !important;           /* black text */
-  border: 1px solid #ccc;
-  padding: 10px;
-  width: 100%;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-/* Fix placeholder visibility */
-#quoteForm input::placeholder,
-#quoteForm textarea::placeholder {
-  color: #555555; /* darker grey so it's visible */
-  opacity: 1;     /* override iOS Safari default */
-}
-
-/* Fix autofill (mobile + Chrome desktop) */
-#quoteForm input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
-  -webkit-text-fill-color: #000000 !important;
-}
-
 
