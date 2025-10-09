@@ -310,7 +310,7 @@ body {
 /* About Section */
 .about {
   padding: 5rem 0;
-  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  background: var(--background);
 }
 
 .features-grid {
@@ -438,7 +438,7 @@ body {
 /* Reviews Section */
 .reviews {
   padding: 5rem 0;
-  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  background: var(--background);
 }
 
 .reviews-grid {
