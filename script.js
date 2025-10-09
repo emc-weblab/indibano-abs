@@ -206,3 +206,32 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = this.href; // opens dialer / call app
     });
 });
+
+// BEFORE & AFTER SLIDESHOW - AUTO MODE
+let slideIndex = 0;
+autoSlides();
+
+function autoSlides() {
+  const slides = document.getElementsByClassName("slide");
+  const dots = document.getElementsByClassName("dot");
+
+  // hide all slides
+  for (let i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";
+  }
+
+  slideIndex++;
+  if (slideIndex > slides.length) { slideIndex = 1 }
+
+  // remove active class from all dots
+  for (let i = 0; i < dots.length; i++) {
+    dots[i].classList.remove("active");
+  }
+
+  // show the current slide + activate its dot
+  slides[slideIndex - 1].style.display = "block";
+  dots[slideIndex - 1].classList.add("active");
+
+  // change slide every 6 seconds
+  setTimeout(autoSlides, 6000);
+}
