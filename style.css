@@ -964,9 +964,9 @@ body {
 
 .image-pair img {
   width: 100%;
-  height: auto;
+  height: 500px;
   border-radius: 12px;
-  border: 2px solid var(--border);
+  border: 1px solid var(--border);
   box-shadow: var(--shadow);
   object-fit: cover;
   transition: var(--transition);
@@ -982,7 +982,7 @@ body {
   bottom: 12px;
   left: 12px;
   background: var(--primary);
-  color: #000;
+  color: #fff;
   padding: 6px 12px;
   border-radius: 6px;
   font-weight: 600;
