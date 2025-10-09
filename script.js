@@ -133,11 +133,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Preload critical images
     const heroImage = new Image();
-    heroImage.src = 'assets/hero-auto-body-bg.jpg';
+    heroImage.src = 'assets/hero-abs-bg.jpg';
 
     // EmailJS integration
     (function(){
-        emailjs.init("1-aaN-UOAvomQM1ON");
+        emailjs.init("xgc5kttSxxpgzvyMC");
     })();
 
    // Quote Modal
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         formMessage.textContent = 'Sending...';
 
-        emailjs.sendForm('service_l28lpnd', 'template_u2rwwj9', this)
+        emailjs.sendForm('service_l28lpnd', 'template_u2rwwj9', "#quoteForm", "xgc5kttSxxpgzvyMC")
         .then(() => {
             formMessage.style.color = 'green';
             formMessage.textContent = 'Message sent successfully!';
