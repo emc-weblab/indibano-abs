@@ -12,7 +12,7 @@
     <meta property="og:title" content="Indibano Auto Body Services – Expert Panelbeating & Auto Body Repairs" />
     <meta property="og:description" content="Professional panelbeating and spraypainting services in Pretoria. Quality repairs and reliable service since establishment." />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" /> -->
+    <meta property="og:image" content="" /> -->
     <meta name="developer" content="EMCdev" />
     
     <link rel="stylesheet" href="style.css">
@@ -22,6 +22,14 @@
     <!-- Include EmailJS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="https://kit.fontawesome.com/b6d3313ac0.js" crossorigin="anonymous"></script>
+
+    <!-- Include Uploadcare Widget -->
+    <script>
+      UPLOADCARE_PUBLIC_KEY = "dd135aa0c6333e2584b8";
+      UPLOADCARE_MULTIPLE = true;
+    </script>
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+
   </head>
 
   <body>
@@ -125,9 +133,14 @@
                     <dd style="text-align: left;">- Four clear images of the damaged areas.</dd>
                 </dl>
                 
-                <input type="file" name="user_attachments" accept="image/*" multiple style="background-color: #ffffff; color: #000000;" />
+                <!-- <input type="hidden" role="uploadcare-uploader" id="openUploader" data-multiple="true" data-clearable="true" /> -->
                 
-                <button type="submit" class="btn btn-secondary full-width">Send Request</button>
+                <button type="button" id="openUploader" class="btn btn-secondary" style="color: #FFD700; background-color: #ffffff; margin-bottom: 4px;">
+                  Upload Images
+                </button>
+
+                <!-- <input type="file" id="quoteImages" name="user_attachments" accept="image/*" multiple style="background-color: #ffffff; color: #000000;" /> -->                
+                <button type="submit" class="btn btn-secondary full-width" style="margin-top: 4px;">Send Request</button>
                 <p id="formMessage" class="form-message"></p>
               </form>
 
