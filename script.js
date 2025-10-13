@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
         mobileMenu.classList.toggle('active');
         mobileMenuBtn.classList.toggle('active');
         
-        // Animate hamburger
         if (mobileMenu.classList.contains('active')) {
             hamburger.style.transform = 'rotate(45deg)';
             hamburger.style.backgroundColor = 'transparent';
@@ -25,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
         link.addEventListener('click', function() {
             mobileMenu.classList.remove('active');
             mobileMenuBtn.classList.remove('active');
-            hamburger.style.transform = 'rotate(0deg)';
+            hamburger.style.transform = 'rotate(0)';
             hamburger.style.backgroundColor = 'var(--foreground)';
         });
     });
@@ -39,58 +38,42 @@ document.addEventListener('DOMContentLoaded', function() {
             if (target) {
                 const headerHeight = document.querySelector('.header').offsetHeight;
                 const targetPosition = target.offsetTop - headerHeight;
-                
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
             }
         });
     });
 
-    // Add scroll effect to header
-    let lastScrollY = window.scrollY;
+    // Header scroll effect
     window.addEventListener('scroll', function() {
         const header = document.querySelector('.header');
-        const currentScrollY = window.scrollY;
-        
-        if (currentScrollY > 100) {
+        if (window.scrollY > 100) {
             header.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
             header.style.backdropFilter = 'blur(12px)';
         } else {
             header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
             header.style.backdropFilter = 'blur(8px)';
         }
-        
-        lastScrollY = currentScrollY;
     });
 
-    // Add loading animation to CTA buttons
+    // CTA button animation
     const ctaButtons = document.querySelectorAll('a[href^="tel:"]');
     ctaButtons.forEach(button => {
         button.addEventListener('click', function() {
             this.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 150);
+            setTimeout(() => this.style.transform = 'scale(1)', 150);
         });
     });
 
-    // Intersection Observer for fade-in animations
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    const observer = new IntersectionObserver(function(entries) {
+    // Fade-in animations using Intersection Observer
+    const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.style.opacity = '1';
                 entry.target.style.transform = 'translateY(0)';
             }
         });
-    }, observerOptions);
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-    // Observe all sections and cards for animations
     const animatedElements = document.querySelectorAll('.feature-card, .service-card, .review-card');
     animatedElements.forEach(el => {
         el.style.opacity = '0';
@@ -99,139 +82,205 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(el);
     });
 
-    // Click tracking for analytics
+    // Trackable clicks (analytics)
     const trackableElements = document.querySelectorAll('a[href^="tel:"], a[href*="maps.google"]');
-    trackableElements.forEach(element => {
-        element.addEventListener('click', function() {
-            console.log('User interaction:', this.href);
-        });
+    trackableElements.forEach(el => {
+        el.addEventListener('click', () => console.log('User interaction:', el.href));
     });
 
-    // Handle form focus states
+    // Input focus styling
     const inputs = document.querySelectorAll('input, textarea');
     inputs.forEach(input => {
-        input.addEventListener('focus', function() {
-            this.parentNode.classList.add('focused');
-        });
-        input.addEventListener('blur', function() {
-            if (!this.value) {
-                this.parentNode.classList.remove('focused');
-            }
+        input.addEventListener('focus', () => input.parentNode.classList.add('focused'));
+        input.addEventListener('blur', () => {
+            if (!input.value) input.parentNode.classList.remove('focused');
         });
     });
 
-    // Add hover effects for service cards
+    // Service card hover effects
     const serviceCards = document.querySelectorAll('.service-card');
     serviceCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-8px)';
-        });
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(-4px)';
-        });
+        card.addEventListener('mouseenter', () => card.style.transform = 'translateY(-8px)');
+        card.addEventListener('mouseleave', () => card.style.transform = 'translateY(-4px)');
     });
 
-    // Preload critical images
+    // Preload hero image
     const heroImage = new Image();
     heroImage.src = 'assets/hero-abs-bg.jpg';
 
-    // EmailJS integration
-    (function(){
+    // Initialize EmailJS
+    (function() {
         emailjs.init("xgc5kttSxxpgzvyMC");
     })();
 
-   // Quote Modal
+    // Quote Modal setup
     const quoteModal = document.getElementById('quoteModal');
-    const openQuoteBtns = document.querySelectorAll('.openQuoteModal'); // select from document
+    const openQuoteBtns = document.querySelectorAll('.openQuoteModal');
     const closeQuoteBtn = quoteModal.querySelector('.close');
     const quoteForm = document.getElementById('quoteForm');
     const formMessage = document.getElementById('formMessage');
 
-    // Open modal
-    openQuoteBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            quoteModal.style.display = 'block';
-        });
-    });
-
-    // Close modal
+    openQuoteBtns.forEach(btn => btn.addEventListener('click', () => {
+        quoteModal.style.display = 'block';
+    }));
     closeQuoteBtn.addEventListener('click', () => quoteModal.style.display = 'none');
-    window.addEventListener('click', (e) => {
+    window.addEventListener('click', e => {
         if (e.target === quoteModal) quoteModal.style.display = 'none';
     });
 
-    // Form submission
-    quoteForm.addEventListener('submit', function(e){
+    // === UPLOADCARE + EMAILJS INTEGRATION ===
+    const form = document.getElementById('quoteForm');
+
+    // Array to store uploaded file URLs
+    let uploadedFiles = [];
+
+    // Open Uploadcare dialog when button is clicked (robust handling)
+    document.getElementById('openUploader').addEventListener('click', async () => {
+        if (typeof uploadcare === 'undefined') {
+            console.error('Uploadcare widget is not loaded.');
+            formMessage.style.color = 'red';
+            formMessage.textContent = 'Uploader Not Available. Please Refresh The Page.';
+            return;
+        }
+
+        try {
+            const dialog = uploadcare.openDialog(null, { multiple: true, clearable: true });
+
+            // Wrap the dialog callbacks in a Promise so we can use async/await
+            const result = await new Promise((resolve, reject) => {
+                dialog.done(resolve).fail(reject);
+            });
+
+            // result may be a single file, an array, or a file group. Normalize to URLs.
+            const urls = [];
+
+            const extractFromFileLike = async (item) => {
+                if (!item) return;
+                // If item already has cdnUrl, use it
+                if (item.cdnUrl) {
+                    urls.push(item.cdnUrl);
+                    return;
+                }
+                // If item has a promise() method (Uploadcare file/fileGroup), await it
+                if (typeof item.promise === 'function') {
+                    try {
+                        const info = await item.promise();
+                        // info might be an object with files array or a single file info
+                        if (Array.isArray(info)) {
+                            info.forEach(f => f && f.cdnUrl && urls.push(f.cdnUrl));
+                        } else if (info && Array.isArray(info.files)) {
+                            info.files.forEach(f => f && f.cdnUrl && urls.push(f.cdnUrl));
+                        } else if (info && info.cdnUrl) {
+                            urls.push(info.cdnUrl);
+                        } else {
+                            console.warn('Unexpected uploadcare info shape:', info);
+                        }
+                    } catch (e) {
+                        console.warn('Error resolving uploadcare item promise', e);
+                    }
+                }
+            };
+
+            if (Array.isArray(result)) {
+                for (const item of result) await extractFromFileLike(item);
+            } else {
+                await extractFromFileLike(result);
+            }
+
+            if (urls.length === 0) {
+                console.warn('No file URLs returned from Uploadcare dialog', result);
+                formMessage.style.color = 'red';
+                formMessage.textContent = 'No Images Uploaded. Please Try Again.';
+                uploadedFiles = [];
+                return;
+            }
+
+            uploadedFiles = urls;
+            console.log('Uploaded files:', uploadedFiles);
+
+        } catch (err) {
+            console.error('Upload failed', err);
+            formMessage.style.color = 'red';
+            formMessage.textContent = 'Upload Failed. Please Try Again.';
+        }
+    });
+
+    // Handle form submission
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        formMessage.style.color = 'white';
         formMessage.textContent = 'Sending...';
 
-        emailjs.sendForm('service_l28lpnd', 'template_u2rwwj9', "#quoteForm", "xgc5kttSxxpgzvyMC")
+        const imageLinksText = uploadedFiles.length ? uploadedFiles.join('\n') : 'No Images Uploaded.';
+
+        // Prepare template params - must match your EmailJS template variables
+        const templateParams = {
+            user_name: form.user_name.value,
+            user_email: form.user_email.value,
+            user_phone: form.user_phone.value,
+            message: form.message.value,
+            image_links: imageLinksText
+        };
+
+        // Log the params so you can verify values in the browser console
+        console.log('Sending EmailJS with params:', templateParams);
+
+        // Send email using EmailJS
+        emailjs.send("service_l28lpnd", "template_u2rwwj9", templateParams)
         .then(() => {
             formMessage.style.color = 'green';
-            formMessage.textContent = 'Message sent successfully!';
-            quoteForm.reset();
-        }, (error) => {
+            formMessage.textContent = 'Request Sent Successfully';
+            form.reset();
+            uploadedFiles = [];
+        })
+        .catch(err => {
+            console.error('EmailJS send error:', err);
             formMessage.style.color = 'red';
-            formMessage.textContent = 'Oops! Something went wrong. Try again.';
-            console.error(error);
+            formMessage.textContent = 'Oops! Something Went Wrong. Try Again.';
         });
     });
 
-    // Call Modal
+    // Call Modal setup
     const callModal = document.getElementById('callModal');
-    const openCallBtns = document.querySelectorAll('#openCallModal'); // all buttons
+    const openCallBtns = document.querySelectorAll('#openCallModal');
     const closeCallBtn = callModal.querySelector('.close');
     const callNowBtn = document.getElementById('callNowBtn');
-    const callMessage = document.getElementById('callMessage');
 
-    // Open modal for any call button
     openCallBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', e => {
             e.preventDefault();
             callModal.style.display = 'block';
-            callNowBtn.href = btn.href; // set number dynamically
-            // callMessage.textContent = 'Click the button below to call us directly.';
+            callNowBtn.href = btn.href;
             callNowBtn.style.display = 'inline-block';
         });
     });
 
-    // Close modal
     closeCallBtn.addEventListener('click', () => callModal.style.display = 'none');
-    window.addEventListener('click', (e) => {
+    window.addEventListener('click', e => {
         if (e.target === callModal) callModal.style.display = 'none';
     });
 
-    // Trigger actual call on Call Now button
     callNowBtn.addEventListener('click', function() {
-        window.location.href = this.href; // opens dialer / call app
+        window.location.href = this.href;
     });
 });
 
-// BEFORE & AFTER SLIDESHOW - AUTO MODE
+// === BEFORE & AFTER SLIDESHOW (Auto mode) ===
 let slideIndex = 0;
 autoSlides();
 
 function autoSlides() {
-  const slides = document.getElementsByClassName("slide");
-  const dots = document.getElementsByClassName("dot");
+    const slides = document.getElementsByClassName("slide");
+    const dots = document.getElementsByClassName("dot");
 
-  // hide all slides
-  for (let i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";
-  }
+    for (let i = 0; i < slides.length; i++) slides[i].style.display = "none";
+    slideIndex++;
+    if (slideIndex > slides.length) slideIndex = 1;
 
-  slideIndex++;
-  if (slideIndex > slides.length) { slideIndex = 1 }
+    for (let i = 0; i < dots.length; i++) dots[i].classList.remove("active");
 
-  // remove active class from all dots
-  for (let i = 0; i < dots.length; i++) {
-    dots[i].classList.remove("active");
-  }
+    slides[slideIndex - 1].style.display = "block";
+    dots[slideIndex - 1].classList.add("active");
 
-  // show the current slide + activate its dot
-  slides[slideIndex - 1].style.display = "block";
-  dots[slideIndex - 1].classList.add("active");
-
-  // change slide every 6 seconds
-  setTimeout(autoSlides, 6000);
+    setTimeout(autoSlides, 6000);
 }
